@@ -1,6 +1,6 @@
 .pushglobalenv <- new.env(parent=emptyenv())
 
-push <- function(fromDF, toDF){
+push <- function( fromDF, toDF, toEnv = .GlobalEnv){
   if(ncol(toDF) != ncol(fromDF)){
     stop("data frame dimensions do not match, canot push()")
   }
@@ -16,26 +16,19 @@ push <- function(fromDF, toDF){
   }
   #figure out offset to apply to assignment
   offset <- get(to_name, envir = .pushglobalenv)
+
+  #execute push in calling environment
+
   eval(
-    expr = parse( text = paste0(to_name, "[(1+", offset, "):", offset+incomming_length, ",] <-",from_name) ),
-    envir = parent.frame()
-    )
+    expr = parse( text = paste0("toEnv$",to_name, "[(1+", offset, "):", offset+incomming_length, ",] <- fromDF") ),
+    envir = environment()
+  )
   #advance offset
   assign(to_name, envir = .pushglobalenv, value = offset+incomming_length)
 }
 
+push_initialise <- function(toDF){
 
-pushtest <- function(df){
-  eval(
-    expr = parse(text = paste0(deparse(substitute(df)),"[1,] <- c(1.0, 1.0, 1.0)")),
-    envir = parent.frame()
-  )
+  assign(x=deparse(substitute(toDF)), value = 0, envir = .pushglobalenv)
 }
-
-#Test Code
-a <- trees
-b <- data.frame(list(v1 = 1.0,v2 = 1, v3 = 1.0))
-push(b,a)
-a
-
 
