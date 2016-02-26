@@ -28,7 +28,22 @@ push <- function( fromDF, toDF, toEnv = .GlobalEnv){
 }
 
 push_initialise <- function(toDF){
+ assign(x=deparse(substitute(toDF)), value = 0, envir = .pushglobalenv)
+}
 
-  assign(x=deparse(substitute(toDF)), value = 0, envir = .pushglobalenv)
+trim_empty <- function(trimDF){
+
+  trim_name <- deparse(substitute(trimDF))
+
+  if(!exists(x = trim_name, envir = .pushglobalenv)){
+    stop(paste0("Found no record of data pushed to ", trim_name, ", cannot trim." ))
+  }
+  offset <- get(trim_name, envir = .pushglobalenv)
+  if(offset == 0){
+    return(trimDF[0:0,])
+  } else {
+    return(trimDF[1:offset,])
+  }
+
 }
 
