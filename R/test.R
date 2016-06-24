@@ -1,12 +1,17 @@
 # # #Test Code
 # library(pushr)
-# a <- trees
-# b <- data.frame(list(v1 = 1.0,v2 = 1, v3 = 1.0))
-# c <- data.frame(list(v1 = 2.0,v2 = 2, v3 = 2.0))
-# push(b,a)
-# a
-# push(b,a)
-# a
+# a <-trees
+# is.data.table(a)
+# b <- data.table(a)
+# is.data.table(b)
+#
+# c <- a[3:5,]
+#
 # push_initialise(a)
-# push(c,a)
-# trim_empty(a)
+# push_initialise(b)
+# b
+# c <- a[1:3,]
+# push(c,b)
+#
+# trim_empty(b)
+# b
